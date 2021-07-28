@@ -10,14 +10,15 @@ pub fn build(b: *std.build.Builder) void {
         .cpu_arch = .thumb,
         .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m4 },
         .os_tag = .freestanding,
-        .abi = .eabihf,
+        .abi = .eabi,
     });
-    exe.addAssemblyFile("gcc_startup_nrf52.S");
     exe.setBuildMode(mode);
+    exe.addAssemblyFile("gcc_startup_nrf52.S");
     exe.setLinkerScriptPath(.{.path = "linker_script.ld"});
     exe.install();
 
     const bin = b.addInstallRaw(exe, "nrf52.bin");
+    bin.step.dependOn(&exe.step);
     const bin_step = b.step("bin", "Generate binary file to be flashed");
     bin_step.dependOn(&bin.step);
 

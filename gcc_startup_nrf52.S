@@ -39,7 +39,7 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
     .equ    Stack_Size, __STACK_SIZE
 #else
     .align 3
-    .equ    Stack_Size, 4096
+    .equ    Stack_Size, 8192
 #endif
     .globl __StackTop
     .globl __StackLimit
@@ -56,7 +56,7 @@ __StackTop:
 #elif defined(__HEAP_SIZE)
     .equ Heap_Size, __HEAP_SIZE
 #else
-    .equ Heap_Size, 4096
+    .equ Heap_Size, 8192
 #endif
     .globl __HeapBase
     .globl __HeapLimit
@@ -252,8 +252,8 @@ Reset_Handler:
  *    __bss_end__: end of the BSS section.
  *
  * All addresses must be aligned to 4 bytes boundary.
- */
 #ifdef __STARTUP_CLEAR_BSS
+*/
     ldr r1, =__bss_start__
     ldr r2, =__bss_end__
 
@@ -268,6 +268,7 @@ Reset_Handler:
     bgt .L_loop3
 
 .L_loop3_done:
+/*
 #endif /* __STARTUP_CLEAR_BSS */
 
 /* Execute SystemInit function. */
