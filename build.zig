@@ -14,7 +14,8 @@ pub fn build(b: *std.build.Builder) void {
     });
     exe.setBuildMode(mode);
     exe.addAssemblyFile("gcc_startup_nrf52.S");
-    exe.setLinkerScriptPath(.{.path = "linker_script.ld"});
+    exe.addIncludeDir(".");
+    exe.setLinkerScriptPath(.{ .path = "linker_script.ld" });
     exe.install();
 
     const bin = b.addInstallRaw(exe, "nrf52.bin");

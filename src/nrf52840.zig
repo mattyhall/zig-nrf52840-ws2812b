@@ -25,7 +25,7 @@ pub fn RegisterRW(comptime Read: type, comptime Write: type) type {
             return @bitCast(Read, self.raw_ptr.*);
         }
 
-        pub fn write(self: Self, value: Write) void {
+        pub inline fn write(self: Self, value: Write) void {
             self.raw_ptr.* = @bitCast(u32, value);
         }
 
@@ -45,7 +45,7 @@ pub fn RegisterRW(comptime Read: type, comptime Write: type) type {
             return self.raw_ptr.*;
         }
 
-        pub fn write_raw(self: Self, value: u32) void {
+        pub inline fn write_raw(self: Self, value: u32) void {
             self.raw_ptr.* = value;
         }
 
@@ -37949,6 +37949,152 @@ pub const i2s = struct {
     };
     ///Enable I2S module.
     pub const enable = Register(enable_val).init(0x40025000 + 0x500);
+
+    pub const config = struct {
+        const mode_val = packed struct {
+          mode: enum(u1) {
+            master = 0,
+            slave = 1,
+          } = .master,
+          _unused: u31 = 0,
+        };
+        const rxen_val_val = packed struct {
+          _: enum (u1) {
+            disabled = 0,
+            enabled = 1,
+          } = .disabled,
+          _unused: u31 = 0,
+        };
+        const txen_val = packed struct {
+          txen: enum (u1) {
+            disabled = 0,
+            enabled = 1,
+          } = .disabled,
+          _unused: u31 = 0,
+        };
+        const mcken_val = packed struct {
+          mcken: enum (u1) {
+            disabled = 0,
+            enabled = 1,
+          } = .disabled,
+          _unused: u31 = 0,
+        };
+        const mckfreq_val = packed struct {
+          mckfreq: enum (u32) {
+            freq_32m_div_125 = 0x020C0000,
+            freq_32m_div_63 =  0x04100000,
+            freq_32m_div_42 =  0x06000000,
+            freq_32m_div_32 =  0x08000000,
+            freq_32m_div_31 =  0x08400000,
+            freq_32m_div_30 =  0x08800000,
+            freq_32m_div_23 =  0x0B000000,
+            freq_32m_div_21 =  0x0C000000,
+            freq_32m_div_16 =  0x10000000,
+            freq_32m_div_15 =  0x11000000,
+            freq_32m_div_11 =  0x16000000,
+            freq_32m_div_10 =  0x18000000,
+            freq_32m_div_8 =   0x20000000,
+          } = .freq_32m_div_125,
+        };
+        const ratio_val = packed struct {
+          ratio: enum (u9) {
+            x32 = 0,
+            x48 = 1,
+            x64 = 2,
+            x96 = 3,
+            x128 = 4,
+            x192 = 5,
+            x256 = 6,
+            x384 = 7,
+            x512 = 8,
+          } = x32,
+          _unused: u23 = 0,
+        };
+        const swidth_val = packed struct {
+          swidth: enum (u2) {
+            bit_8 = 0,
+            bit_16 = 1,
+            bit_24 = 2,
+          } = .bit_8,
+          _unused: u30 = 0,
+        };
+        const align__val = packed struct {
+          align_: enum (u1) {
+            left = 0,
+            right = 1,
+          } = .left,
+          _unused: u31 = 0,
+        };
+        const format_val = packed struct {
+          format: enum (u1) {
+            i2s = 0,
+            aligned = 1,
+          } = .i2s,
+          _unused: u31 = 0,
+        };
+        const channels_val = packed struct {
+          channels: enum (u2) {
+            stereo = 0,
+            left = 1,
+            right = 2,
+          },
+          _unused: u30 = 0,
+        };
+        pub const mode = Register(mode_val).init(0x40025000 + 0x504);
+        pub const rxen = Register(rxen_val).init(0x40025000 + 0x508);
+        pub const txen = Register(txen_val).init(0x40025000 + 0x50C);
+        pub const mcken = Register(mcken_val).init(0x40025000 + 0x510);
+        pub const mckfreq = Register(mckfreq_val).init(0x40025000 + 0x514);
+        pub const ratio = Register(ratio_val).init(0x40025000 + 0x518);
+        pub const swidth = Register(swidth_val).init(0x40025000 + 0x51C);
+        pub const align_ = Register(align__val).init(0x40025000 + 0x520);
+        pub const format = Register(format_val).init(0x40025000 + 0x524);
+        pub const channels = Register(channels_val).init(0x40025000 + 0x528);
+    };
+
+    const txd_val = packed struct {
+      ptr: u32 = 0,
+    };
+    pub const txd = Register(txd_val).init(0x40025000 + 0x540);
+
+    const rxtxd_val = packed struct {
+      maxcnt: u32 = 0,
+    };
+    pub const rxtxd = Register(rxtxd_val).init(0x40025000 + 0x550);
+
+
+    pub const psel = struct {
+      const mck_val = packed struct {
+        pin: u8 = 255,
+        _unused0: u8 = 0,
+        _unused: u16 = 0,
+      };
+      const sck_val = packed struct {
+        pin: u8 = 255,
+        _unused0: u8 = 0,
+        _unused: u16 = 0,
+      };
+      const lrck_val = packed struct {
+        pin: u8 = 255,
+        _unused0: u8 = 0,
+        _unused: u16 = 0,
+      };
+      const sdin_val = packed struct {
+        pin: u8 = 255,
+        _unused0: u8 = 0,
+        _unused: u16 = 0,
+      };
+      const sdout_val = packed struct {
+        pin: u8 = 255,
+        _unused0: u8 = 0,
+        _unused: u16 = 0,
+      };
+      pub const mck = Register(mck_val).init(0x40025000 + 0x560);
+      pub const sck = Register(sck_val).init(0x40025000 + 0x564);
+      pub const lrck = Register(lrck_val).init(0x40025000 + 0x568);
+      pub const sdin = Register(sdin_val).init(0x40025000 + 0x56C);
+      pub const sdout = Register(sdout_val).init(0x40025000 + 0x570);
+    };
 };
 
 ///FPU
